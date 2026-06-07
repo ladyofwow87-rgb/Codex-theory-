@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,6 +21,7 @@ class AmbientSynth {
 
     fun startPlaying(mode: String, scope: CoroutineScope) {
         stopPlaying()
+        Log.d("AmbientSynth", "startPlaying requested for mode: $mode")
 
         try {
             val attributes = AudioAttributes.Builder()
@@ -43,26 +45,59 @@ class AmbientSynth {
             }
             val finalBufferSize = (minBufSize * 2).coerceAtLeast(4096)
 
-            audioTrack = AudioTrack.Builder()
-                .setAudioAttributes(attributes)
-                .setAudioFormat(format)
-                .setBufferSizeInBytes(finalBufferSize)
-                .setTransferMode(AudioTrack.MODE_STREAM)
-                .build()
+            try {
+                audioTrack = AudioTrack.Builder()
+                    .setAudioAttributes(attributes)
+                    .setAudioFormat(format)
+                    .setBufferSizeInBytes(finalBufferSize)
+                    .setTransferMode(AudioTrack.MODE_STREAM)
+                    .build()
+            } catch (t: Throwable) {
+                Log.e("AmbientSynth", "AudioTrack.Builder failed, trying fallback", t)
+                audioTrack = null
+            }
+
+            // Universal fallback to the legacy constructor for maximum virtual/emulated/hardware target compatibility
+            if (audioTrack == null || audioTrack?.state != AudioTrack.STATE_INITIALIZED) {
+                audioTrack?.release()
+                Log.d("AmbientSynth", "Using legacy AudioTrack constructor fallback")
+                try {
+                    @Suppress("DEPRECATION")
+                    audioTrack = AudioTrack(
+                        AudioManager.STREAM_MUSIC,
+                        sampleRate,
+                        AudioFormat.CHANNEL_OUT_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        finalBufferSize,
+                        AudioTrack.MODE_STREAM
+                    )
+                } catch (t: Throwable) {
+                    Log.e("AmbientSynth", "Legacy AudioTrack constructor failed too", t)
+                    audioTrack = null
+                }
+            }
 
             if (audioTrack?.state != AudioTrack.STATE_INITIALIZED) {
+                Log.e("AmbientSynth", "AudioTrack failed to initialize on this device container.")
                 audioTrack?.release()
                 audioTrack = null
                 return
             }
 
+            // Explicitly set a clear media play volume so it's fully audible on real phone hardware
+            audioTrack?.setVolume(1.0f)
             audioTrack?.play()
+            Log.d("AmbientSynth", "AudioTrack successfully initialized and playing.")
         } catch (e: Throwable) {
+            Log.e("AmbientSynth", "Uncaught exception in startPlaying setup", e)
             audioTrack = null
             return
         }
 
+        val trackRef = audioTrack ?: return
+
         synthJob = scope.launch(Dispatchers.Default) {
+            val localTrack = trackRef // Robust thread-local encapsulation prevents audio stream mixing
             val buffer = ShortArray(1024)
             var phase = 0.0
 
@@ -81,7 +116,7 @@ class AmbientSynth {
             }
 
             while (isActive) {
-                val track = audioTrack ?: break
+                if (localTrack.state != AudioTrack.STATE_INITIALIZED) break
                 for (i in buffer.indices) {
                     val angle = 2.0 * Math.PI * freq1 / sampleRate
                     var value = sin(phase)
@@ -197,13 +232,13 @@ class AmbientSynth {
                         phase %= (2.0 * Math.PI)
                     }
 
-                    // Map synthesised wave to 16-bit short audio range (expanded to 15000.0 for rich, clear audibility in browser stream)
-                    val shortVal = (value * 15000.0).toInt().coerceIn(-32768, 32767).toShort()
+                    // Map synthesised wave to 16-bit short audio range (expanded to 28000.0 for rich, clear, loud audibility in browser stream and speakers)
+                    val shortVal = (value * 28000.0).toInt().coerceIn(-32768, 32767).toShort()
                     buffer[i] = shortVal
                 }
                 
                 try {
-                    val result = track.write(buffer, 0, buffer.size)
+                    val result = localTrack.write(buffer, 0, buffer.size)
                     if (result < 0) {
                         break
                     }

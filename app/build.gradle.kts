@@ -119,3 +119,23 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+// Resolve the paths safely outside the task block to keep it Configuration Cache compatible.
+val buildApkPath: String = layout.buildDirectory.file("outputs/apk/debug/app-debug.apk").get().asFile.absolutePath
+val rootApkPath: String = file("${rootDir}/DoodleDuckStudio.apk").absolutePath
+
+tasks.register("copyApkToRoot") {
+  val s = buildApkPath
+  val d = rootApkPath
+  doLast {
+    val sourceFile = File(s)
+    val destFile = File(d)
+    if (sourceFile.exists()) {
+      sourceFile.copyTo(destFile, overwrite = true)
+    }
+  }
+}
+
+afterEvaluate {
+  tasks.findByName("assembleDebug")?.finalizedBy("copyApkToRoot")
+}

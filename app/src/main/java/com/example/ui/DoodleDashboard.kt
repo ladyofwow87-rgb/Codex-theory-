@@ -639,16 +639,27 @@ fun DoodleDashboard(
                 // Elegant canonical Material 3 bottom navigation bar with active pills
                 NavigationBar(
                     containerColor = Color(0xFF13151D),
-                    modifier = Modifier.navigationBarsPadding()
+                    modifier = Modifier.navigationBarsPadding(),
+                    tonalElevation = 0.dp
                 ) {
                     NavigationBarItem(
                         selected = activeMainSection == "Studio",
                         onClick = { activeMainSection = "Studio" },
-                        label = { Text("Studio") },
+                        label = { 
+                            Text(
+                                "Draw", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.Brush, contentDescription = "Studio Hub") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_studio")
@@ -656,11 +667,21 @@ fun DoodleDashboard(
                     NavigationBarItem(
                         selected = activeMainSection == "Inspiration",
                         onClick = { activeMainSection = "Inspiration" },
-                        label = { Text("Inspire") },
+                        label = { 
+                            Text(
+                                "Ideas", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.AutoAwesome, contentDescription = "Inspiration Center") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_inspiration")
@@ -668,11 +689,21 @@ fun DoodleDashboard(
                     NavigationBarItem(
                         selected = activeMainSection == "Museum",
                         onClick = { activeMainSection = "Museum" },
-                        label = { Text("Museum") },
+                        label = { 
+                            Text(
+                                "Gallery", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.Museum, contentDescription = "Art Museum") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_museum")
@@ -680,11 +711,21 @@ fun DoodleDashboard(
                     NavigationBarItem(
                         selected = activeMainSection == "Dino_Tip",
                         onClick = { activeMainSection = "Dino_Tip" },
-                        label = { Text("Dino & Mail") },
+                        label = { 
+                            Text(
+                                "Tips", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.MailOutline, contentDescription = "Dino Tip") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_dino")
@@ -692,11 +733,21 @@ fun DoodleDashboard(
                     NavigationBarItem(
                         selected = activeMainSection == "Store",
                         onClick = { activeMainSection = "Store" },
-                        label = { Text("Store") },
+                        label = { 
+                            Text(
+                                "Store", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Online Store") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_store")
@@ -704,11 +755,21 @@ fun DoodleDashboard(
                     NavigationBarItem(
                         selected = activeMainSection == "Arena",
                         onClick = { activeMainSection = "Arena" },
-                        label = { Text("Arena") },
+                        label = { 
+                            Text(
+                                "Arena", 
+                                fontSize = 10.sp, 
+                                maxLines = 1, 
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            ) 
+                        },
+                        alwaysShowLabel = false,
                         icon = { Icon(Icons.Default.EmojiEvents, contentDescription = "Challenge Arena") },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
+                            unselectedTextColor = Color.Gray,
                             indicatorColor = moodTheme.primaryBrush
                         ),
                         modifier = Modifier.testTag("nav_arena")
@@ -720,6 +781,7 @@ fun DoodleDashboard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .statusBarsPadding()
                     .padding(innerPadding)
                     .background(moodTheme.mainBackground)
                     .drawBehind {
@@ -1216,11 +1278,11 @@ fun StudioSection(
         }
     }
 
-    Row(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         // Main Core canvas + Controls left side
         Column(
             modifier = Modifier
-                .weight(1f)
+                .fillMaxSize()
                 .padding(12.dp)
         ) {
             // Header Stats Board
@@ -1336,9 +1398,12 @@ fun StudioSection(
                                 }
                             }
                         } else {
-                            Modifier.pointerInput(selectedTool, strokeWidth, selectedColor) {
+                            Modifier.pointerInput(selectedTool, strokeWidth, selectedColor, activeSidebarPanel) {
                                 detectDragGestures(
                                     onDragStart = { offset ->
+                                        if (activeSidebarPanel != "None") {
+                                            onSidebarToggle("None")
+                                        }
                                         if (selectedTool != "Eraser") {
                                             activePoints.clear()
                                             activePoints.add(StrokePoint(offset.x, offset.y))
@@ -1621,17 +1686,20 @@ fun StudioSection(
             HorizontalDivider(color = Color.DarkGray)
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
+            // Stacked clean toolbars to prevent horizontal cramming on portrait devices
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Formatting modifiers
-                Row {
+                // Row 1: Tool operations (Icons only) - evenly spaced
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(
                         onClick = { viewModel.undoStroke() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(Color(0xFF242730), RoundedCornerShape(10.dp))
                             .testTag("undo_button")
                     ) {
@@ -1641,7 +1709,6 @@ fun StudioSection(
                     IconButton(
                         onClick = { viewModel.clearCanvas() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(Color(0xFF242730), RoundedCornerShape(10.dp))
                     ) {
                         Icon(Icons.Default.DeleteForever, contentDescription = "Clear canvas", tint = Color.Red)
@@ -1650,7 +1717,6 @@ fun StudioSection(
                     IconButton(
                         onClick = { viewModel.toggleSymmetry() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(
                                 if (symmetryEnabled) moodTheme.primaryBrush else Color(0xFF242730),
                                 RoundedCornerShape(10.dp)
@@ -1662,7 +1728,6 @@ fun StudioSection(
                     IconButton(
                         onClick = { viewModel.togglePerspective() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(
                                 if (perspectiveEnabled) moodTheme.primaryBrush else Color(0xFF242730),
                                 RoundedCornerShape(10.dp)
@@ -1674,7 +1739,6 @@ fun StudioSection(
                     IconButton(
                         onClick = { viewModel.toggleAiDuet() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(
                                 if (aiDuetEnabled) Color(0xFFFFD54F) else Color(0xFF242730),
                                 RoundedCornerShape(10.dp)
@@ -1690,7 +1754,6 @@ fun StudioSection(
                     IconButton(
                         onClick = { viewModel.toggleLivingTrail() },
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .background(
                                 if (inkLivingTrailEnabled) Color(0xFF00E676) else Color(0xFF242730),
                                 RoundedCornerShape(10.dp)
@@ -1704,8 +1767,11 @@ fun StudioSection(
                     }
                 }
 
-                // AI Scientists & Save button actions
-                Row {
+                // Row 2: Large primary buttons - side by side, filled width evenly to prevent wrapping
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Button(
                         onClick = {
                             // Create bitmap of drawing and invoke Gemini Multimodal Analyser
@@ -1715,9 +1781,9 @@ fun StudioSection(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
                         shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.padding(end = 6.dp)
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text("🔬 Art Scientist", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text("🔬 Art Scientist", fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1)
                     }
 
                     Button(
@@ -1727,9 +1793,10 @@ fun StudioSection(
                             Toast.makeText(context, "Artwork Saved to Virtual Museum! (+50 Coins)", Toast.LENGTH_LONG).show()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = moodTheme.primaryBrush),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text("Save Art", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text("Save Art", fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1)
                     }
                 }
             }
@@ -1794,27 +1861,62 @@ fun StudioSection(
             }
         }
 
-        // Sidebar Panel - sliding drawer container
+        // Sidebar Panel - sliding drawer container (overlaid at the end to prevent canvas squeezing)
         AnimatedVisibility(
             visible = activeSidebarPanel != "None",
             enter = slideInHorizontally(animationSpec = spring()) { it },
-            exit = slideOutHorizontally(animationSpec = spring()) { it }
+            exit = slideOutHorizontally(animationSpec = spring()) { it },
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
         ) {
             Surface(
                 color = Color(0xFF13151D),
+                shadowElevation = 8.dp,
                 modifier = Modifier
                     .width(180.dp)
                     .fillMaxHeight()
                     .border(1.dp, Color(0xFF212530))
             ) {
-                when (activeSidebarPanel) {
-                    "Brush" -> BrushSidebar(viewModel = viewModel, userProgress = userProgress, costMap = mapOf(
-                        "Fire" to 80, "Smoke" to 50, "Star" to 60, "Bubble" to 40, "Pixel" to 30, "Rainbow Trail" to 100, "Neon Glow" to 120
-                    ))
-                    "Sticker" -> StickerSidebar(viewModel = viewModel, userProgress = userProgress)
-                    "Palette" -> PaletteSidebar(viewModel = viewModel, currentMood = userProgress.activeMood)
-                    "Paper" -> PaperSidebar(viewModel = viewModel, userProgress = userProgress)
-                    "Music" -> MusicSidebar(viewModel = viewModel, userProgress = userProgress)
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // Touch-friendly header to effortlessly close the active options drawer
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF1B1D26))
+                            .clickable { onSidebarToggle("None") }
+                            .padding(vertical = 12.dp, horizontal = 12.dp)
+                            .testTag("sidebar_close_button"),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close Panel",
+                                tint = Color(0xFFE53935),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "CLOSE PANEL",
+                                color = Color(0xFFE53935),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    HorizontalDivider(color = Color.DarkGray)
+
+                    Box(modifier = Modifier.weight(1f)) {
+                        when (activeSidebarPanel) {
+                            "Brush" -> BrushSidebar(viewModel = viewModel, userProgress = userProgress, costMap = mapOf(
+                                "Fire" to 80, "Smoke" to 50, "Star" to 60, "Bubble" to 40, "Pixel" to 30, "Rainbow Trail" to 100, "Neon Glow" to 120
+                            ))
+                            "Sticker" -> StickerSidebar(viewModel = viewModel, userProgress = userProgress)
+                            "Palette" -> PaletteSidebar(viewModel = viewModel, currentMood = userProgress.activeMood)
+                            "Paper" -> PaperSidebar(viewModel = viewModel, userProgress = userProgress)
+                            "Music" -> MusicSidebar(viewModel = viewModel, userProgress = userProgress)
+                        }
+                    }
                 }
             }
         }
