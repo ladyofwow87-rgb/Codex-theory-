@@ -1,0 +1,6 @@
+{
+  "name": "DoodleDuck Studio",
+  "description": "Every day begins with a blank page and a curious duck.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
